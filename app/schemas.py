@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 class ClientCreate(BaseModel):
     name: str
@@ -20,3 +20,5 @@ class ClientResponse(BaseModel):
     email: EmailStr
     company: str | None = None
     phone: str | None = None
+
+    model_config = ConfigDict(from_attributes=True)
