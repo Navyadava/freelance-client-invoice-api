@@ -1,6 +1,14 @@
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import (
+    Column,
+    Date,
+    DateTime,
+    ForeignKey,
+    Integer,
+    Numeric,
+    String,
+)
 
 from app.database import Base
 
@@ -20,10 +28,14 @@ class Invoice(Base):
     __tablename__ = "invoices"
 
     id = Column(Integer, primary_key=True, index=True)
-    client_id = Column(Integer, ForeignKey("clients.id"), nullable=False)
+    client_id = Column(
+        Integer,
+        ForeignKey("clients.id"),
+        nullable=False
+    )
     service = Column(String, nullable=False)
-    amount = Column(Float, nullable=False)
-    status = Column(String, default="unpaid")
-    due_date = Column(DateTime, nullable=False)
+    amount = Column(Numeric(10, 2), nullable=False)
+    status = Column(String, default="unpaid", nullable=False)
+    due_date = Column(Date, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     paid_at = Column(DateTime, nullable=True)
