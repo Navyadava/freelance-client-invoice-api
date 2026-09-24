@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -77,5 +78,28 @@ def get_invoice(
             status_code=404,
             detail="Invoice not found"
         )
+
+    return invoice
+
+@router.patch("/{invoice_id}/pay", response_model=InvoiceResponse)
+def mark_invoice_paid(
+    invoice_id: int,
+    db: Session = Depends(get_db)
+):
+    invoice = db.query(Invoice).filter(
+        Invoice.id == invoice_id
+    ).first()
+
+    if not invoice:
+        raise HTTPException(
+            status_code=404,
+            detail="Invoice not found"
+        )
+
+    invoice.status = "paid"
+    invoice.paid_at = datetime.utcnow()
+
+    db.commit()
+    db.refresh(invoice)
 
     return invoice
